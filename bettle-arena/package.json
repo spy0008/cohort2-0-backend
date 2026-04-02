@@ -21,6 +21,8 @@
     "@langchain/mistralai": "^1.0.7",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "tsx": "^4.21.0"
+    "langchain": "^1.2.39",
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6"
   }
 }

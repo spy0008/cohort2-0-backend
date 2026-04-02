@@ -1,0 +1,337 @@
+// Spotify Desktop 2026 - Compact Bar + Expandable View
+$spotify-green: #1db954;
+$bg-dark: #181818;
+$glass-dark: rgba(28, 28, 28, 0.95);
+
+.player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  font-family:
+    "Inter",
+    -apple-system,
+    sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.expanded {
+    bottom: 0;
+    height: 100vh;
+    .player-bar {
+      border-radius: 0;
+      height: 90px;
+    }
+  }
+
+  &.compact .player-bar {
+    height: 90px;
+  }
+}
+
+.player-bar {
+  background: $glass-dark;
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 1rem;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+
+  &:hover {
+    .left-section .song-details {
+      .title {
+        opacity: 1;
+      }
+      .artist {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.album-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.song-details {
+  min-width: 0;
+  flex: 1;
+
+  .title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.2s ease;
+  }
+
+  .artist {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.2s ease;
+  }
+}
+
+.like-btn {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.25rem;
+
+  &:hover {
+    color: #1db954;
+  }
+}
+
+.center-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 2;
+}
+
+.main-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.control-btn,
+.play-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.play-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: $spotify-green;
+  color: black;
+  font-size: 1.25rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: #1ed760;
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4);
+  }
+}
+
+.control-icon.small {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.25rem;
+  border-radius: 50%;
+
+  &:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.time-current,
+.time-total {
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 2.5rem;
+  font-weight: 500;
+}
+
+.progress-slider {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: $spotify-green;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(29, 185, 84, 0.5);
+  }
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 140px;
+}
+
+.volume-icon,
+.more-btn {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+
+  &:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.volume-slider {
+  width: 80px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+.expand-toggle {
+  position: absolute;
+  right: 25rem;
+  top: 35%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Expanded Overlay */
+.expanded-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: expandIn 0.3s ease-out;
+}
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.expanded-content {
+  text-align: center;
+  color: white;
+}
+
+.expanded-art {
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  object-fit: cover;
+  margin-bottom: 2rem;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5);
+}
+
+.close-expanded {
+  background: $spotify-green;
+  color: black;
+  margin-top: 1rem;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #1ed760;
+    transform: translateY(-2px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .player-bar {
+    padding: 0 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .left-section {
+    flex: none;
+    gap: 0.5rem;
+  }
+
+  .album-thumb {
+    width: 48px;
+    height: 48px;
+  }
+}

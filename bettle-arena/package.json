@@ -1,0 +1,26 @@
+{
+  "name": "bettle-arena",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/express": "^5.0.6"
+  },
+  "dependencies": {
+    "@langchain/cohere": "^1.0.4",
+    "@langchain/core": "^1.1.38",
+    "@langchain/google": "^0.1.9",
+    "@langchain/langgraph": "^1.2.6",
+    "@langchain/mistralai": "^1.0.7",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "tsx": "^4.21.0"
+  }
+}

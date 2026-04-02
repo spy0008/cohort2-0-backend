@@ -1,0 +1,16 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 1rem;
+
+  .button{
+    padding: 0.5rem 1rem;
+    background-color: rgb(246, 44, 105);
+    color: white;
+    font-weight: bold;
+    outline: none;
+    border-radius: 25%;
+
+  }
+}

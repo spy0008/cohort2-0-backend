@@ -1,0 +1,7 @@
+UI Layar => Ui dikhana and navigation handle (pages / components)
+
+hook layar => State APIs manage krna (hooks)
+
+State layar => Data store (authContext)
+
+API Layar => Backend se comunicate krne ke liye (services)

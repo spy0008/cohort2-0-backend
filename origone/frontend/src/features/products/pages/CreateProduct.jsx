@@ -77,7 +77,7 @@ const CreateProduct = () => {
       data.append("priceCurrency", formData.priceCurrency);
       images.forEach((img) => data.append("images", img.file));
       await handleCreateProduct(data);
-      navigate("/");
+      navigate("/seller/deshboard");
     } finally {
       setIsSubmitting(false);
     }

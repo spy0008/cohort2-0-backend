@@ -42,12 +42,14 @@ export const register = async (req, res) => {
         .json({ message: "User with this email or contact already exists" });
     }
 
+    const isSellerBoolean = isSeller === true || isSeller === "true";
+
     const user = await userModel.create({
       email,
       contact,
       password,
       fullname,
-      role: isSeller ? "seller" : "buyer",
+      role: isSellerBoolean ? "seller" : "buyer",
     });
 
     await sendTokenResponse(user, res, "User registered successfully");

@@ -1,9 +1,4 @@
-import axios from "axios";
-
-const authApiInstance = axios.create({
-  baseURL: "/api/auth",
-  withCredentials: true,
-});
+import axiosInstance from "../../../shared/lib/axios";
 
 export async function register({
   email,
@@ -12,27 +7,22 @@ export async function register({
   fullname,
   isSeller,
 }) {
-  const response = await authApiInstance.post("/register", {
+  const res = await axiosInstance.post("/auth/register", {
     email,
     contact,
     password,
     fullname,
     isSeller,
   });
-  return response.data;
+  return res.data;
 }
 
 export async function login({ email, password }) {
-  const response = await authApiInstance.post("/login", {
-    email,
-    password,
-  });
-
-  return response.data;
+  const res = await axiosInstance.post("/auth/login", { email, password });
+  return res.data;
 }
 
 export async function getMe() {
-  const response = await authApiInstance.get("/me");
-
-  return response.data;
+  const res = await axiosInstance.get("/auth/me");
+  return res.data;
 }

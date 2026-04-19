@@ -4,7 +4,6 @@ import {
   authenticateSeller,
 } from "../middlewares/auth.middleware.js";
 import {
-  checkout,
   getMyOrders,
   updateOrderStatus,
   getSellerRevenue,

@@ -32,11 +32,12 @@ const Login = () => {
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="hidden md:flex relative">
         <motion.img
-          src="/images/loginImage.jpg"
+          src="https://ik.imagekit.io/spy1710/orgone/loginImage.jpg"
           className="absolute inset-0 w-full h-full object-cover"
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
+          alt="Login_image"
         />
 
         <div className="absolute inset-0 bg-black/60" />
@@ -110,7 +111,7 @@ const Login = () => {
 
           <p className="text-sm text-gray-500">
             Don’t have an account?{" "}
-            <Link to="/register" className="text-orange-500">
+            <Link to="/register" className="text-orange-500 hover:underline">
               Create one
             </Link>
           </p>

@@ -26,3 +26,8 @@ export async function getMe() {
   const res = await axiosInstance.get("/auth/me");
   return res.data;
 }
+
+export async function logout() {
+  const res = await axiosInstance.post("/auth/logout");
+  return res.data;
+}

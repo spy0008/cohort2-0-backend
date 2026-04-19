@@ -7,6 +7,7 @@ import {
   getMe,
   googleCallback,
   login,
+  logout,
   register,
 } from "../controllers/auth.controller.js";
 import passport from "passport";
@@ -20,6 +21,8 @@ router.post("/register", validateRegisterUser, register);
 router.post("/login", validateLoginUser, login);
 
 router.get("/me", authenticateUser, getMe);
+
+router.post("/logout", logout);
 
 // /api/auth/google
 router.get(

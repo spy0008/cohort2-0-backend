@@ -37,11 +37,12 @@ const Register = () => {
 
       <div className="hidden md:flex relative">
         <motion.img
-          src="/images/registerImage.jpg"
+          src="https://ik.imagekit.io/spy1710/orgone/registerImage.jpg"
           className="absolute inset-0 w-full h-full object-cover"
            initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
+          alt="Register_image"
         />
 
         <div className="absolute inset-0 bg-black/60" />
@@ -126,7 +127,7 @@ const Register = () => {
 
           <p className="text-sm text-gray-500">
             Already have an account?{" "}
-            <Link to="/login" className="text-orange-500">
+            <Link to="/login" className="text-orange-500 hover:underline">
               Sign in
             </Link>
           </p>

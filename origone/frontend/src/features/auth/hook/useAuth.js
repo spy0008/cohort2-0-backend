@@ -1,5 +1,10 @@
-import { setError, setLoading, setUser } from "../state/auth.slice";
-import { register, login, getMe } from "../service/auth.api";
+import {
+  setClearUser,
+  setError,
+  setLoading,
+  setUser,
+} from "../state/auth.slice";
+import { register, login, getMe, logout } from "../service/auth.api";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -23,6 +28,7 @@ export const useAuth = () => {
         isSeller,
       });
       dispatch(setUser(data.user));
+      dispatch(setError(null));
       toast.success("Register Successfully 🔥");
       return data.user;
     } catch (error) {
@@ -39,6 +45,7 @@ export const useAuth = () => {
 
       dispatch(setUser(data.user));
       toast.success("Welcome back 🔥");
+      dispatch(setError(null));
 
       return data.user;
     } catch (error) {
@@ -53,12 +60,13 @@ export const useAuth = () => {
       dispatch(setLoading(true));
       const data = await getMe();
       dispatch(setUser(data.user));
+      dispatch(setError(null));
     } catch (error) {
-      dispatch(dispatch(setUser(null)));
+      dispatch(setUser(null));
       dispatch(
         setError(
           error.response?.data?.message ||
-            "fatching user failed, please Login again",
+            "Fetching user failed, please login again",
         ),
       );
     } finally {
@@ -66,5 +74,19 @@ export const useAuth = () => {
     }
   }
 
-  return { handleRegister, handleLogin, handleGetUser };
+  async function handleLogout() {
+    try {
+      dispatch(setLoading(true));
+      await logout();
+      dispatch(setClearUser());
+      dispatch(setError(null));
+      toast.success("Logged out 👋");
+    } catch (error) {
+      dispatch(setError(error.response?.data?.message || "Logout failed"));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  }
+
+  return { handleRegister, handleLogin, handleGetUser, handleLogout };
 };

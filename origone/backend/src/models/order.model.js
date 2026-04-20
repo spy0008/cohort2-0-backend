@@ -7,13 +7,28 @@ const orderItemSchema = new mongoose.Schema(
       ref: "product",
       required: true,
     },
+
+    // 🔥 SNAPSHOT DATA (VERY IMPORTANT)
+    title: String,
+    image: String,
+
+    // 🔥 VARIANT
+    size: String,
+    color: String,
+
     quantity: {
       type: Number,
       required: true,
     },
+
     price: {
       type: Number,
       required: true,
+    },
+
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
     },
   },
   { _id: false },
@@ -36,7 +51,14 @@ const orderSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+      enum: [
+        "pending",
+        "confirmed",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "returned",
+      ],
       default: "pending",
     },
 
@@ -46,10 +68,21 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
 
+    paymentMethod: {
+      type: String,
+      enum: ["cod", "razorpay"],
+      default: "cod",
+    },
+
+    // 🔥 NEW
+    razorpay_order_id: String,
+    razorpay_payment_id: String,
+    razorpay_signature: String,
+
     address: {
-      fullAddress: String,
-      city: String,
-      pincode: String,
+      fullAddress: { type: String, required: true },
+      city: { type: String, required: true },
+      pincode: { type: String, required: true },
     },
   },
   { timestamps: true },

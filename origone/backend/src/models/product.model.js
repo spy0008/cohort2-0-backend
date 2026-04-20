@@ -13,8 +13,16 @@ const variantSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    images: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
-  { _id: false },
+  { _id: true },
 );
 
 const productSchema = new mongoose.Schema(
@@ -47,11 +55,6 @@ const productSchema = new mongoose.Schema(
         enum: ["INR"],
         default: "INR",
       },
-    },
-    stock: {
-      type: Number,
-      required: true,
-      default: 0,
     },
     variants: [variantSchema],
 

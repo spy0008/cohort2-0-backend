@@ -16,8 +16,8 @@ router.get("/", authenticateUser, getCart);
 
 router.put("/", authenticateUser, updateCartItem);
 
-router.delete("/:productId", authenticateUser, removeFromCart);
+router.delete("/remove", authenticateUser, removeFromCart);
 
-router.delete("/", authenticateUser, clearCart);
+router.delete("/clear", authenticateUser, clearCart);
 
 export default router;

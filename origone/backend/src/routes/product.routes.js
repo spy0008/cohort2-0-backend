@@ -4,7 +4,9 @@ import {
   createProduct,
   deleteProduct,
   getProducts,
+  getSellerDashboard,
   getSellerProducts,
+  getSellerRevenue,
   getSingleProduct,
   updateProduct,
 } from "../controllers/product.controller.js";
@@ -28,7 +30,7 @@ const router = express.Router();
 router.post(
   "/",
   authenticateSeller,
-  upload.array("images", 7),
+  upload.any(),
   createProductValidator,
   createProduct,
 );
@@ -52,15 +54,13 @@ router.get("/", getProducts);
  * @description Get single product
  * @access Public
  */
-router.get("/:id", getSingleProduct);
 
-router.put(
-  "/:id",
-  authenticateSeller,
-  upload.array("images", 7),
-  updateProduct,
-);
+router.put("/:id", authenticateSeller, upload.any(), updateProduct);
 
 router.delete("/:id", authenticateSeller, deleteProduct);
+
+router.get("/seller/revenue", authenticateSeller, getSellerRevenue);
+router.get("/seller/dashboard", authenticateSeller, getSellerDashboard);
+router.get("/:id", getSingleProduct);
 
 export default router;

@@ -5,6 +5,9 @@ import Register from "../features/auth/pages/Register";
 import Login from "../features/auth/pages/Login";
 import Home from "../features/home/pages/Home";
 import About from "../features/home/pages/About";
+import CreateProduct from "../features/seller/product/pages/CreateProduct";
+import Protected from "../features/auth/components/Protected";
+import SellerProductsPage from "../features/seller/product/pages/SellerProduct";
 // future: Shop, SellerDashboard etc.
 
 export const routes = createBrowserRouter([
@@ -23,11 +26,23 @@ export const routes = createBrowserRouter([
       },
       {
         path: "shop",
-        element: <div>Shop Page</div>, // placeholder
+        element: <div>Shop Page</div>,
       },
       {
-        path: "seller",
-        element: <div>Seller Dashboard</div>,
+        path: "seller/dashboard/create-product",
+        element: (
+          <Protected role="seller">
+            <CreateProduct />
+          </Protected>
+        ),
+      },
+      {
+        path: "seller/dashboard/my-vault",
+        element: (
+          <Protected role="seller">
+            <SellerProductsPage />
+          </Protected>
+        ),
       },
     ],
   },

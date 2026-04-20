@@ -15,11 +15,10 @@ const Protected = ({ children, role = "buyer" }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (user.role !== role) {
+  if (role && user.role !== role) {
     return <Navigate to="/" />;
   }
 
   return children;
 };
-
 export default Protected;

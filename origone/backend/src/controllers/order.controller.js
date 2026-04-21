@@ -210,6 +210,7 @@ export const getSellerOrders = async (req, res) => {
 
     const orders = await orderModel
       .find({ "items.seller": sellerId })
+      .populate("user", "fullname email contact")
       .sort({ createdAt: -1 });
 
     const filteredOrders = orders.map((order) => {
@@ -255,7 +256,7 @@ export const updateOrderStatus = async (req, res) => {
       "shipped",
       "delivered",
       "cancelled",
-      "returned", 
+      "returned",
     ];
 
     if (!allowedStatuses.includes(status)) {
@@ -266,8 +267,8 @@ export const updateOrderStatus = async (req, res) => {
       pending: ["confirmed", "cancelled"],
       confirmed: ["shipped"],
       shipped: ["delivered"],
-      delivered: ["returned"], 
-      returned: [], 
+      delivered: ["returned"],
+      returned: [],
       cancelled: [],
     };
 

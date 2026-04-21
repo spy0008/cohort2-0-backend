@@ -48,13 +48,11 @@ const Navbar = () => {
             : "bg-white text-black border-b border-gray-200"
       }`}
     >
-      {/* LOGO */}
       <h1 className="text-3xl tracking-widest font-semibold">
         ORgone<span className="text-orange-500">.</span>
       </h1>
 
-      {/* NAV LINKS */}
-      <div className="hidden md:flex gap-8 text-sm tracking-wide">
+      <div className="hidden md:flex gap-8 text-sm tracking-wide items-center">
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -87,9 +85,23 @@ const Navbar = () => {
         >
           About
         </NavLink>
+
+        {user?.role === "seller" && (
+          <>
+            <NavLink
+              to="/seller/dashboard/my-vault"
+              className={({ isActive }) =>
+                `transition ${
+                  isActive ? "text-orange-500" : "hover:text-orange-500"
+                }`
+              }
+            >
+              My Vault
+            </NavLink>
+          </>
+        )}
       </div>
 
-      {/* ACTION */}
       <div className="flex items-center gap-4 relative" ref={dropdownRef}>
         {user ? (
           <div
@@ -97,12 +109,10 @@ const Navbar = () => {
             onClick={() => setOpen(!open)}
             onMouseEnter={() => setOpen(true)}
           >
-            {/* AVATAR */}
             <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-black text-sm">
               {user?.fullname?.[0]}
             </div>
 
-            {/* ARROW */}
             <motion.div
               animate={{ rotate: open ? 180 : 0 }}
               transition={{ duration: 0.3 }}
@@ -110,7 +120,6 @@ const Navbar = () => {
               <ArrowDown size={16} />
             </motion.div>
 
-            {/* DROPDOWN */}
             <AnimatePresence>
               {open && (
                 <motion.div
@@ -120,7 +129,6 @@ const Navbar = () => {
                   transition={{ duration: 0.2 }}
                   className="absolute right-0 top-12 w-64 bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-xl text-white"
                 >
-                  {/* USER INFO */}
                   <div className="mb-3">
                     <p className="text-sm font-medium">{user?.fullname}</p>
                     <p className="text-xs text-gray-400">{user?.email}</p>
@@ -128,7 +136,6 @@ const Navbar = () => {
 
                   <div className="border-t border-white/10 my-2" />
 
-                  {/* ROLE */}
                   <p className="text-xs text-gray-400 mb-3">
                     Account:{" "}
                     <span className="text-orange-500 capitalize">
@@ -136,18 +143,28 @@ const Navbar = () => {
                     </span>
                   </p>
 
-                  {/* ACTIONS */}
                   <div className="flex flex-col gap-2 text-sm">
                     {user?.role === "seller" && (
-                      <Link
-                        to="/seller/dashboard"
-                        className="hover:text-orange-500 transition"
-                      >
-                        Dashboard
-                      </Link>
+                      <>
+                        <Link
+                          to="/seller/dashboard"
+                          className="hover:text-orange-500 transition"
+                        >
+                          Dashboard
+                        </Link>
+                        <Link
+                          to="/seller/dashboard/create-product"
+                          className="hover:text-orange-500 transition"
+                        >
+                          Add Product
+                        </Link>
+                      </>
                     )}
 
-                    <button onClick={handleLogout} className="text-left cursor-pointer hover:text-red-500 transition">
+                    <button
+                      onClick={handleLogout}
+                      className="text-left cursor-pointer hover:text-red-500 transition"
+                    >
                       Logout
                     </button>
                   </div>

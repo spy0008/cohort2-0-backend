@@ -1,4 +1,3 @@
-// product.slice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createProductApi, getSellerProductsApi } from "../service/product.api";
 

@@ -8,12 +8,12 @@ import About from "../features/home/pages/About";
 import CreateProduct from "../features/seller/product/pages/CreateProduct";
 import Protected from "../features/auth/components/Protected";
 import SellerProductsPage from "../features/seller/product/pages/SellerProduct";
-// future: Shop, SellerDashboard etc.
+import SellerDashboard from "../features/seller/product/pages/SellerDashboard";
 
 export const routes = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />, // 🔥 wrapper
+    element: <MainLayout />,
 
     children: [
       {
@@ -41,6 +41,14 @@ export const routes = createBrowserRouter([
         element: (
           <Protected role="seller">
             <SellerProductsPage />
+          </Protected>
+        ),
+      },
+      {
+        path: "seller/dashboard",
+        element: (
+          <Protected role="seller">
+            <SellerDashboard />
           </Protected>
         ),
       },

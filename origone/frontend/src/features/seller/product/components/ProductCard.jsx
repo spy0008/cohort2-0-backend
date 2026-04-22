@@ -8,7 +8,6 @@ const ProductCard = ({ product }) => {
       whileHover={{ y: -6 }}
       className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition"
     >
-      {/* IMAGE */}
       <div className="h-60 bg-gray-100 overflow-hidden">
         <img
           src={image}
@@ -17,7 +16,6 @@ const ProductCard = ({ product }) => {
         />
       </div>
 
-      {/* CONTENT */}
       <div className="p-4 space-y-2">
         <h2 className="font-semibold text-lg line-clamp-1">
           {product.title}
@@ -27,7 +25,6 @@ const ProductCard = ({ product }) => {
           {product.description}
         </p>
 
-        {/* PRICE */}
         <div className="flex items-center justify-between">
           <span className="font-bold text-lg">
             ₹ {product.price.amount}
@@ -38,7 +35,6 @@ const ProductCard = ({ product }) => {
           </span>
         </div>
 
-        {/* VARIANTS */}
         <div className="flex flex-wrap gap-2 mt-2">
           {product.variants?.slice(0, 3).map((v, i) => (
             <span
@@ -50,7 +46,6 @@ const ProductCard = ({ product }) => {
           ))}
         </div>
 
-        {/* STOCK */}
         <div className="text-xs text-gray-500 mt-1">
           Total Stock:{" "}
           {product.variants.reduce((acc, v) => acc + v.stock, 0)}

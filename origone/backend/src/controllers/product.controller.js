@@ -131,7 +131,10 @@ export const getSellerProducts = async (req, res) => {
   const limitNum = Number(limit);
 
   const products = await productModel
-    .find({ seller: sellerId })
+    .find({
+      seller: sellerId,
+      isActive: true,
+    })
     .skip((pageNum - 1) * limitNum)
     .limit(limitNum)
     .sort({ createdAt: -1 });
@@ -168,7 +171,7 @@ export async function getProducts(req, res) {
     .sort(Object.keys(sortOption).length ? sortOption : { createdAt: -1 })
     .skip((pageNum - 1) * limitNum)
     .limit(limitNum)
-    .select("title price variants seller createdAt");
+    .select("title price images seller createdAt");
 
   const total = await productModel.countDocuments(filter);
 

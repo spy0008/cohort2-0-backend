@@ -87,17 +87,15 @@ const OrdersTable = ({ orders }) => {
               }}
               className="border rounded-xl p-4 space-y-3 cursor-pointer hover:shadow-md transition"
             >
-              {/* HEADER */}
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">
                   Order #{order._id.slice(-6)}
                 </span>
 
-                {/* 🔥 DROPDOWN */}
                 <select
                   value={currentStatus}
                   disabled={loadingId === order._id}
-                  onClick={(e) => e.stopPropagation()} // 🔥 prevent modal open
+                  onClick={(e) => e.stopPropagation()}
                   onChange={(e) =>
                     handleStatusUpdate(order._id, e.target.value)
                   }
@@ -113,7 +111,6 @@ const OrdersTable = ({ orders }) => {
                 </select>
               </div>
 
-              {/* ITEMS */}
               {order.items.map((item, idx) => (
                 <div key={idx} className="flex gap-3">
                   <img

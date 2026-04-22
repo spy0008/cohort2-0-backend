@@ -49,18 +49,18 @@ router.get("/seller", authenticateSeller, getSellerProducts);
  */
 router.get("/", getProducts);
 
-/**
- * @route GET /api/products/:productId
- * @description Get single product
- * @access Public
- */
-
 router.put("/:id", authenticateSeller, upload.any(), updateProduct);
 
 router.delete("/:id", authenticateSeller, deleteProduct);
 
 router.get("/seller/revenue", authenticateSeller, getSellerRevenue);
 router.get("/seller/dashboard", authenticateSeller, getSellerDashboard);
+
+/**
+ * @route GET /api/products/:productId
+ * @description Get single product
+ * @access Public
+ */
 router.get("/:id", getSingleProduct);
 
 export default router;

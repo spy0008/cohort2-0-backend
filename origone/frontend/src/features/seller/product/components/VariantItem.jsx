@@ -17,7 +17,6 @@ const VariantItem = ({ variant, index, updateVariant, removeVariant }) => {
       preview: URL.createObjectURL(file),
     };
 
-    // 🔥 REPLACE OLD IMAGE (NOT ADD)
     updateVariant(index, {
       ...variant,
       images: [newImage],
@@ -26,7 +25,7 @@ const VariantItem = ({ variant, index, updateVariant, removeVariant }) => {
 
   const onDrop = (e) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0]; // 🔥 only first file
+    const file = e.dataTransfer.files[0];
     handleImage(file);
   };
 
@@ -92,12 +91,11 @@ const VariantItem = ({ variant, index, updateVariant, removeVariant }) => {
         />
       </label>
 
-      {/* PREVIEW (ONLY ONE) */}
       {variant.images.length > 0 && (
         <div className="mt-3">
           <div className="relative w-20 h-20 group">
             <img
-              src={variant.images[0].preview}
+              src={variant.images[0].preview || variant.images[0].url}
               className="w-full h-full object-cover rounded-lg"
             />
 

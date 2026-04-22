@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createProductApi, getSellerProductsApi } from "../service/product.api";
+import {
+  createProductApi,
+  getSellerProductsApi,
+  deleteProductApi,
+  updateProductApi,
+} from "../service/product.api";
 
 export const createProductThunk = createAsyncThunk(
   "product/create",
@@ -24,8 +29,38 @@ export const fetchSellerProducts = createAsyncThunk(
   },
 );
 
+export const deleteProductThunk = createAsyncThunk(
+  "product/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      await deleteProductApi(id);
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  },
+);
+
+export const updateProductThunk = createAsyncThunk(
+  "product/update",
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const res = await updateProductApi(id, formData);
+      return res.product;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  },
+);
+
 const initialState = {
   create: {
+    loading: false,
+    success: false,
+    error: null,
+  },
+
+  update: {
     loading: false,
     success: false,
     error: null,
@@ -44,6 +79,9 @@ const productSlice = createSlice({
   reducers: {
     resetCreateState: (state) => {
       state.create = initialState.create;
+    },
+    resetUpdateState: (state) => {
+      state.update = initialState.update;
     },
   },
   extraReducers: (builder) => {
@@ -74,9 +112,25 @@ const productSlice = createSlice({
       .addCase(fetchSellerProducts.rejected, (state, action) => {
         state.list.loading = false;
         state.list.error = action.payload;
+      })
+      .addCase(deleteProductThunk.fulfilled, (state, action) => {
+        state.list.products = state.list.products.filter(
+          (p) => p._id !== action.payload,
+        );
+      })
+      .addCase(updateProductThunk.pending, (state) => {
+        state.update.loading = true;
+      })
+      .addCase(updateProductThunk.fulfilled, (state) => {
+        state.update.loading = false;
+        state.update.success = true;
+      })
+      .addCase(updateProductThunk.rejected, (state, action) => {
+        state.update.loading = false;
+        state.update.error = action.payload;
       });
   },
 });
 
-export const { resetCreateState } = productSlice.actions;
+export const { resetCreateState, resetUpdateState } = productSlice.actions;
 export default productSlice.reducer;

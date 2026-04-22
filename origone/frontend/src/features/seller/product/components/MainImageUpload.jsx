@@ -6,8 +6,10 @@ const MainImageUpload = ({ images, setImages }) => {
   const handleFiles = (files) => {
     const valid = [];
 
-    if (files.size > MAX_SIZE) {
-      toast.error("Max 5MB allowed all images");
+    const totalSize = files.reduce((acc, f) => acc + f.size, 0);
+
+    if (totalSize > MAX_SIZE) {
+      toast.error("Total size must be under 5MB");
       return;
     }
 
@@ -53,7 +55,7 @@ const MainImageUpload = ({ images, setImages }) => {
         {images.map((img, i) => (
           <div key={i} className="relative group">
             <img
-              src={img.preview}
+              src={img.preview || img.url}
               className="h-24 w-full object-cover rounded-xl"
             />
             <button

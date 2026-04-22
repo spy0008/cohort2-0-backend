@@ -8,7 +8,7 @@ export const useSellerProducts = () => {
 
   useEffect(() => {
     dispatch(fetchSellerProducts());
-  }, []);
+  }, [dispatch]);
 
   return { products, loading };
 };

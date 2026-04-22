@@ -1,4 +1,3 @@
-// ProductGrid.jsx
 import { useNavigate } from "react-router";
 import ProductCard from "./ProductCard";
 
@@ -19,7 +18,7 @@ const ProductGrid = ({ products }) => {
 
         <button
           onClick={() => navigate("/seller/dashboard/create-product")}
-          className="bg-black text-white px-6 py-3 rounded-lg hover:opacity-80 transition"
+          className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:opacity-80 transition"
         >
           + Create Product
         </button>

@@ -5,6 +5,8 @@ import dashboardReducer from "../features/seller/product/state/dashboardSlice";
 import shopReducer from "../features/shop/state/shopSlice";
 import singleProductSlice from "../features/shop/state/SingleProductSlice";
 import cartReducer from "../features/cart/state/cart.slice";
+import checkoutReducer from "../features/checkout/state/checkout.slice";
+import orderReducer from "../features/orders/state/order.slice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +16,7 @@ export const store = configureStore({
     shop: shopReducer,
     singleProduct: singleProductSlice,
     cart: cartReducer,
+    checkout: checkoutReducer,
+    orders: orderReducer,
   },
 });

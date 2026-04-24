@@ -9,6 +9,7 @@ import {
   createPaymentOrder,
   verifyPaymentAndCreateOrder,
   getSellerOrders,
+  getOrderById,
 } from "../controllers/order.controller.js";
 
 const router = express.Router();
@@ -17,6 +18,7 @@ const router = express.Router();
 router.get("/my-orders", authenticateUser, getMyOrders);
 router.post("/create-payment", authenticateUser, createPaymentOrder);
 router.post("/verify-payment", authenticateUser, verifyPaymentAndCreateOrder);
+router.get("/:id", authenticateUser, getOrderById);
 
 // Seller
 router.put("/:orderId/status", authenticateSeller, updateOrderStatus);

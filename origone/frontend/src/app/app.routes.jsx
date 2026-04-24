@@ -12,6 +12,10 @@ import SellerDashboard from "../features/seller/product/pages/SellerDashboard";
 import ShopPage from "../features/shop/pages/ShopPage";
 import ProductDetailPage from "../features/shop/pages/ProductDetailPage";
 import CartPage from "../features/cart/pages/CartPage";
+import CheckoutPage from "../features/checkout/pages/CheckoutPage";
+import OrderSuccess from "../features/checkout/pages/OrderSuccess";
+import MyOrdersPage from "../features/orders/pages/MyOrdersPage";
+import OrderDetailPage from "../features/orders/pages/OrderDetailPage";
 
 export const routes = createBrowserRouter([
   {
@@ -35,9 +39,25 @@ export const routes = createBrowserRouter([
         path: "shop/product/:id",
         element: <ProductDetailPage />,
       },
-       {
+      {
         path: "cart",
         element: <CartPage />,
+      },
+      {
+        path: "checkout",
+        element: <CheckoutPage />,
+      },
+      {
+        path: "order-success/:id",
+        element: <OrderSuccess />,
+      },
+      {
+        path: "orders",
+        element: <MyOrdersPage />,
+      },
+      {
+        path: "orders/:id",
+        element: <OrderDetailPage />,
       },
       {
         path: "seller/dashboard/create-product",

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, NavLink, useLocation } from "react-router";
+import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { ArrowDown, ShoppingCart } from "lucide-react";
 import { useAuth } from "../../features/auth/hook/useAuth";
@@ -10,6 +10,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
   const [openCart, setOpenCart] = useState(false);
+  const navigate = useNavigate();
 
   const { handleLogout } = useAuth();
   const user = useSelector((state) => state.auth.user);
@@ -271,8 +272,15 @@ const Navbar = () => {
                       </>
                     )}
 
+                    <Link to="/orders" className="block hover:text-orange-500">
+                      My Orders
+                    </Link>
+
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        handleLogout();
+                        navigate("/login");
+                      }}
                       className="mt-2 cursor-pointer text-left hover:text-red-500"
                     >
                       Logout

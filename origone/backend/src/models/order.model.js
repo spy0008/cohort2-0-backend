@@ -74,7 +74,6 @@ const orderSchema = new mongoose.Schema(
       default: "cod",
     },
 
-    // 🔥 NEW
     razorpay_order_id: String,
     razorpay_payment_id: String,
     razorpay_signature: String,

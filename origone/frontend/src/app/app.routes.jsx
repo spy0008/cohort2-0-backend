@@ -11,6 +11,7 @@ import SellerProductsPage from "../features/seller/product/pages/SellerProduct";
 import SellerDashboard from "../features/seller/product/pages/SellerDashboard";
 import ShopPage from "../features/shop/pages/ShopPage";
 import ProductDetailPage from "../features/shop/pages/ProductDetailPage";
+import CartPage from "../features/cart/pages/CartPage";
 
 export const routes = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ export const routes = createBrowserRouter([
       {
         path: "shop/product/:id",
         element: <ProductDetailPage />,
+      },
+       {
+        path: "cart",
+        element: <CartPage />,
       },
       {
         path: "seller/dashboard/create-product",

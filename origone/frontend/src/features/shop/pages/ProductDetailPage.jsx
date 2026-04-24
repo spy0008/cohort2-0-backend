@@ -1,16 +1,22 @@
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useSingleProduct } from "../hooks/useSingleProduct";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
-import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useProductActions } from "../../seller/product/hooks/useProductActions";
+import { useCart } from "../../cart/hooks/useCart";
+import toast from "react-hot-toast";
 
 const ProductDetailPage = () => {
   const { deleteProduct } = useProductActions();
+  const { addToCart } = useCart();
+
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [added, setAdded] = useState(false);
+
   const {
     product,
     loading,
@@ -19,6 +25,28 @@ const ProductDetailPage = () => {
     setSelectedImage,
     setSelectedVariant,
   } = useSingleProduct(id);
+
+  // ✅ ADD TO CART
+  const handleAddToCart = async () => {
+    if (!selectedVariant) {
+      toast.error("Select variant");
+      return;
+    }
+
+    try {
+      await addToCart({
+        product: product,
+        size: selectedVariant.size,
+        color: selectedVariant.color,
+      });
+
+      // ✅ animation
+      setAdded(true);
+      setTimeout(() => setAdded(false), 1500);
+    } catch (err) {
+      toast.error("Failed to add");
+    }
+  };
 
   const handleDelete = async () => {
     await deleteProduct(product._id);
@@ -32,6 +60,7 @@ const ProductDetailPage = () => {
   const user = useSelector((state) => state.auth.user);
   const isOwner = user?._id === product?.seller?._id;
 
+  // ✅ derived data
   const colors = product
     ? [...new Set(product.variants.map((v) => v.color))]
     : [];
@@ -40,8 +69,9 @@ const ProductDetailPage = () => {
     ? [...new Set(product.variants.map((v) => v.size))]
     : [];
 
+  // ✅ default image
   useEffect(() => {
-    if (product && product.images?.length && !selectedImage) {
+    if (product?.images?.length && !selectedImage) {
       setSelectedImage(product.images[0].url);
     }
   }, [product]);
@@ -51,6 +81,7 @@ const ProductDetailPage = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen px-6 md:px-16 py-22">
+      {/* 🔙 BACK */}
       <div className="mb-6">
         <button
           onClick={() => navigate(-1)}
@@ -60,7 +91,9 @@ const ProductDetailPage = () => {
           <span className="text-sm font-medium">Back</span>
         </button>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* 🔥 THUMBNAILS */}
         <div className="lg:col-span-1 flex lg:flex-col gap-3">
           {product.images.map((img, i) => (
             <img
@@ -76,6 +109,7 @@ const ProductDetailPage = () => {
           ))}
         </div>
 
+        {/* 🔥 MAIN IMAGE */}
         <div className="lg:col-span-6 bg-white rounded-2xl p-6 flex justify-center">
           <motion.img
             src={selectedImage}
@@ -84,6 +118,7 @@ const ProductDetailPage = () => {
           />
         </div>
 
+        {/* 🔥 DETAILS */}
         <div className="lg:col-span-5 space-y-5">
           <h1 className="text-3xl font-semibold">{product.title}</h1>
 
@@ -93,10 +128,10 @@ const ProductDetailPage = () => {
 
           <div className="text-2xl font-bold">₹{product.price.amount}</div>
 
+          {/* 🎨 COLORS */}
           {colors.length > 0 && (
             <div>
               <p className="text-sm font-medium mb-2">Color</p>
-
               <div className="flex gap-3">
                 {colors.map((color) => {
                   const variant = product.variants.find(
@@ -108,7 +143,6 @@ const ProductDetailPage = () => {
                       key={color}
                       onClick={() => {
                         setSelectedVariant(variant);
-
                         if (variant?.images?.length) {
                           setSelectedImage(variant.images[0].url);
                         }
@@ -126,6 +160,7 @@ const ProductDetailPage = () => {
             </div>
           )}
 
+          {/* 📏 SIZES */}
           {allSizes.length > 0 && (
             <div>
               <p className="text-sm font-medium mb-2">Select Size</p>
@@ -157,37 +192,61 @@ const ProductDetailPage = () => {
             </div>
           )}
 
+          {/* 📦 STOCK */}
           {selectedVariant && (
             <p className="text-green-600 text-sm">
               In Stock ({selectedVariant.stock})
             </p>
           )}
 
+          {/* 🚀 ACTIONS */}
           <div className="flex gap-4 pt-3">
             {isOwner ? (
               <>
                 <button
                   onClick={handleEdit}
-                  className="flex-1 cursor-pointer hover:bg-orange-400/20 transition-colors duration-200 border py-3 rounded-xl"
+                  className="flex-1 border py-3 rounded-xl hover:bg-orange-100"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="flex-1 cursor-pointer bg-orange-500 hover:bg-red-700 transition-colors duration-200  text-white py-3 rounded-xl"
+                  className="flex-1 bg-orange-500 text-white py-3 rounded-xl hover:bg-red-600"
                 >
                   Delete
                 </button>
               </>
             ) : (
-              <button className="flex-1 bg-orange-500 cursor-pointer hover:bg-orange-400 transition-colors duration-200 text-white py-3 rounded-xl">
-                Add to Cart
-              </button>
+              <motion.button
+                disabled={!selectedVariant}
+                onClick={handleAddToCart}
+                whileTap={{ scale: 0.95 }}
+                className={`flex-1 py-3 rounded-xl text-white transition ${
+                  !selectedVariant
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : added
+                      ? "bg-green-500"
+                      : "bg-orange-500 hover:bg-orange-400"
+                }`}
+              >
+                {added ? (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="flex items-center justify-center gap-2"
+                  >
+                    <Check size={18} /> Added
+                  </motion.span>
+                ) : (
+                  "Add to Cart"
+                )}
+              </motion.button>
             )}
           </div>
         </div>
       </div>
 
+      {/* 📝 DESCRIPTION */}
       <div className="mt-16 bg-white p-8 rounded-2xl max-w-5xl">
         <h2 className="text-xl font-semibold mb-4">Product Description</h2>
         <p className="text-gray-600">{product.description}</p>

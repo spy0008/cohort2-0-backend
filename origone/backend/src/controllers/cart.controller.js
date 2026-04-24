@@ -64,10 +64,14 @@ export const addToCart = async (req, res) => {
 
   await cart.save();
 
+  const updatedCart = await cartModel
+    .findById(cart._id)
+    .populate("items.product");
+
   res.json({
     success: true,
     message: "Added to cart",
-    cart,
+    cart: updatedCart,
   });
 };
 
@@ -134,7 +138,14 @@ export const updateCartItem = async (req, res) => {
 
   await cart.save();
 
-  res.json({ success: true, cart });
+  const updatedCart = await cartModel
+    .findById(cart._id)
+    .populate("items.product");
+
+  res.json({
+    success: true,
+    cart: updatedCart,
+  });
 };
 
 // ================= REMOVE ITEM =================

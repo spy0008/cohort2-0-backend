@@ -307,7 +307,13 @@ export const getSellerRevenue = async (req, res) => {
     const sellerId = req.user._id;
 
     const result = await orderModel.aggregate([
-      { $match: { paymentStatus: "paid" } },
+      {
+        $match: {
+          paymentStatus: "paid",
+          status: "delivered",
+          sellerPaid: true,
+        },
+      },
       { $unwind: "$items" },
       {
         $match: {

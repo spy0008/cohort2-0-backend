@@ -1,6 +1,10 @@
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
+import {
+  createContact,
+  createFundAccount,
+} from "../services/payment.service.js";
 
 async function sendTokenResponse(user, res, message) {
   const token = jwt.sign(
@@ -151,5 +155,47 @@ export const logout = async (req, res) => {
     res.status(500).json({
       message: "Logout failed",
     });
+  }
+};
+
+export const updateBankDetails = async (req, res) => {
+  try {
+    const sellerId = req.user._id;
+    const { accountNumber, ifsc, accountHolderName } = req.body;
+
+    if (!accountNumber || !ifsc || !accountHolderName) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    const user = await userModel.findById(sellerId);
+
+    // 🔥 1. Create Contact (KYC)
+    const contact = await createContact(user);
+
+    // 🔥 2. Create Fund Account
+    const fundAccount = await createFundAccount(contact.id, {
+      accountNumber,
+      ifsc,
+      accountHolderName,
+    });
+
+    // 🔥 3. Save everything
+    user.bankDetails = {
+      accountNumber,
+      ifsc,
+      accountHolderName,
+      isVerified: true,
+      razorpayContactId: contact.id,
+      razorpayFundAccountId: fundAccount.id,
+    };
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Bank linked successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

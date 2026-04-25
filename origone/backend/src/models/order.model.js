@@ -30,6 +30,10 @@ const orderItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
+    status: {
+      type: String,
+      default: "pending",
+    },
   },
   { _id: false },
 );
@@ -64,7 +68,7 @@ const orderSchema = new mongoose.Schema(
 
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
+      enum: ["pending", "paid", "failed", "refunded"],
       default: "pending",
     },
 
@@ -83,6 +87,14 @@ const orderSchema = new mongoose.Schema(
       city: { type: String, required: true },
       pincode: { type: String, required: true },
     },
+    sellerPaid: {
+      type: Boolean,
+      default: false,
+    },
+
+    deliveredAt: Date,
+
+    cancelledAt: Date,
   },
   { timestamps: true },
 );

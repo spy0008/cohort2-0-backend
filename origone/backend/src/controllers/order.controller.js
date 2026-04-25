@@ -3,6 +3,8 @@ import productModel from "../models/product.model.js";
 import orderModel from "../models/order.model.js";
 import crypto from "crypto";
 import { razorpay } from "../services/payment.service.js";
+import walletModel from "../models/wallet.model.js";
+import walletTxnModel from "../models/walletTransaction.model.js";
 
 // 🔥 helper
 function findVariant(product, size, color) {
@@ -276,6 +278,151 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(400).json({
         message: `Cannot change status from ${order.status} to ${status}`,
       });
+    }
+
+    if (order.paymentStatus === "refunded") {
+      return res.status(400).json({ message: "Already refunded" });
+    }
+
+    if (status === "cancelled" && order.status === "delivered") {
+      return res.status(400).json({
+        message: "Delivered order cannot be cancelled",
+      });
+    }
+
+    if (status === "returned") {
+      // refund user
+      if (order.paymentStatus === "paid") {
+        await razorpay.payments.refund(order.razorpay_payment_id, {
+          amount: order.totalAmount * 100,
+        });
+
+        order.paymentStatus = "refunded";
+      }
+
+      // restore stock
+      for (const item of order.items) {
+        await productModel.updateOne(
+          {
+            _id: item.product,
+            "variants.size": item.size,
+            "variants.color": item.color,
+          },
+          {
+            $inc: { "variants.$.stock": item.quantity },
+          },
+        );
+      }
+
+      // wallet reverse (safe)
+      for (const item of order.items) {
+        const amount = item.price * item.quantity;
+
+        const wallet = await walletModel.findOne({ seller: item.seller });
+
+        if (wallet) {
+          wallet.balance = Math.max(0, wallet.balance - amount);
+          wallet.withdrawableBalance = Math.max(
+            0,
+            wallet.withdrawableBalance - amount,
+          );
+          await wallet.save();
+        }
+
+        await walletTxnModel.create({
+          seller: item.seller,
+          order: order._id,
+          amount,
+          type: "debit",
+          status: "failed",
+        });
+      }
+    }
+
+    if (status === "cancelled") {
+      if (order.status === "cancelled") {
+        return res.status(400).json({ message: "Already cancelled" });
+      }
+
+      if (order.status === "delivered") {
+        return res.status(400).json({
+          message: "Delivered order cannot be cancelled",
+        });
+      }
+
+      order.cancelledAt = new Date();
+
+      if (order.paymentStatus === "paid") {
+        await razorpay.payments.refund(order.razorpay_payment_id, {
+          amount: order.totalAmount * 100,
+        });
+
+        order.paymentStatus = "refunded";
+      }
+
+      for (const item of order.items) {
+        await productModel.updateOne(
+          {
+            _id: item.product,
+            "variants.size": item.size,
+            "variants.color": item.color,
+          },
+          {
+            $inc: { "variants.$.stock": item.quantity },
+          },
+        );
+      }
+
+      for (const item of order.items) {
+        const amount = item.price * item.quantity;
+
+        const wallet = await walletModel.findOne({ seller: item.seller });
+
+        if (wallet) {
+          wallet.balance = Math.max(0, wallet.balance - amount);
+          wallet.withdrawableBalance = Math.max(
+            0,
+            wallet.withdrawableBalance - amount,
+          );
+
+          await wallet.save();
+        }
+
+        await walletTxnModel.create({
+          seller: item.seller,
+          order: order._id,
+          amount,
+          type: "debit",
+          status: "failed",
+        });
+      }
+    }
+
+    if (status === "delivered" && order.status !== "delivered") {
+      order.deliveredAt = new Date();
+
+      for (const item of order.items) {
+        const amount = item.price * item.quantity;
+
+        let wallet = await walletModel.findOne({ seller: item.seller });
+        if (!wallet) {
+          wallet = await walletModel.create({ seller: item.seller });
+        }
+
+        wallet.balance += amount;
+        await wallet.save();
+
+        await walletTxnModel.create({
+          seller: item.seller,
+          order: order._id,
+          amount,
+          type: "credit",
+          status: "pending",
+          availableAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        });
+      }
+
+      order.sellerPaid = true;
     }
 
     order.status = status;

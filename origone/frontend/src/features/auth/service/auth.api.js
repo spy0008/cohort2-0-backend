@@ -31,3 +31,7 @@ export async function logout() {
   const res = await axiosInstance.post("/auth/logout");
   return res.data;
 }
+
+export const updateBankApi = (data) => {
+  return axiosInstance.post("/auth/bank-details", data);
+};

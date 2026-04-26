@@ -7,6 +7,7 @@ import singleProductSlice from "../features/shop/state/SingleProductSlice";
 import cartReducer from "../features/cart/state/cart.slice";
 import checkoutReducer from "../features/checkout/state/checkout.slice";
 import orderReducer from "../features/orders/state/order.slice";
+import walletReducer from "../features/seller/wallet/state/wallet.slice";
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     cart: cartReducer,
     checkout: checkoutReducer,
     orders: orderReducer,
+    wallet: walletReducer,
   },
 });

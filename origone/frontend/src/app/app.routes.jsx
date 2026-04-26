@@ -16,6 +16,7 @@ import CheckoutPage from "../features/checkout/pages/CheckoutPage";
 import OrderSuccess from "../features/checkout/pages/OrderSuccess";
 import MyOrdersPage from "../features/orders/pages/MyOrdersPage";
 import OrderDetailPage from "../features/orders/pages/OrderDetailPage";
+import WalletPage from "../features/seller/wallet/pages/WalletPage";
 
 export const routes = createBrowserRouter([
   {
@@ -88,6 +89,14 @@ export const routes = createBrowserRouter([
         element: (
           <Protected role="seller">
             <CreateProduct />
+          </Protected>
+        ),
+      },
+      {
+        path: "seller/dashboard/wallet",
+        element: (
+          <Protected role="seller">
+            <WalletPage />
           </Protected>
         ),
       },

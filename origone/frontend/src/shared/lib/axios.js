@@ -1,6 +1,7 @@
 import axios from "axios";
-import { store } from "../../app/app.store";
 import { setUser } from "../../features/auth/state/auth.slice";
+import { useDispatch } from "react-redux";
+
 
 const axiosInstance = axios.create({
   baseURL: "/api",
@@ -14,7 +15,8 @@ axiosInstance.interceptors.response.use(
       error.response?.status === 401 &&
       !window.location.pathname.includes("/login")
     ) {
-      store.dispatch(setUser(null));
+      const dispatch = useDispatch()
+      dispatch(setUser(null));
     }
 
     return Promise.reject(error);

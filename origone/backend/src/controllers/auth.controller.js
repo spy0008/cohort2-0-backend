@@ -1,10 +1,6 @@
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
-import {
-  createContact,
-  createFundAccount,
-} from "../services/payment.service.js";
 
 async function sendTokenResponse(user, res, message) {
   const token = jwt.sign(
@@ -163,39 +159,35 @@ export const updateBankDetails = async (req, res) => {
     const sellerId = req.user._id;
     const { accountNumber, ifsc, accountHolderName } = req.body;
 
+    // ✅ validation
     if (!accountNumber || !ifsc || !accountHolderName) {
       return res.status(400).json({ message: "All fields required" });
     }
 
     const user = await userModel.findById(sellerId);
 
-    // 🔥 1. Create Contact (KYC)
-    const contact = await createContact(user);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    // 🔥 2. Create Fund Account
-    const fundAccount = await createFundAccount(contact.id, {
-      accountNumber,
-      ifsc,
-      accountHolderName,
-    });
-
-    // 🔥 3. Save everything
+    // ✅ directly save (NO RAZORPAY)
     user.bankDetails = {
       accountNumber,
       ifsc,
       accountHolderName,
-      isVerified: true,
-      razorpayContactId: contact.id,
-      razorpayFundAccountId: fundAccount.id,
+      isVerified: true, // simulation me directly true
     };
 
     await user.save();
 
     res.json({
       success: true,
-      message: "Bank linked successfully",
+      message: "Bank details saved (simulation mode)",
+      bankDetails: user.bankDetails,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };

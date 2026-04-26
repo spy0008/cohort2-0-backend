@@ -15,19 +15,13 @@ export const withdraw = async (req, res) => {
       .findOne({ seller: sellerId })
       .session(session);
 
-    if (!wallet) throw new Error("Wallet not found");
-    if (wallet.withdrawableBalance <= 0) throw new Error("No balance");
-
-    const user = await userModel.findById(sellerId).session(session);
-    const fundAccountId = user.bankDetails.razorpayFundAccountId;
-
-    if (!user?.bankDetails?.razorpayFundAccountId) {
-      throw new Error("Bank not linked");
+    if (!wallet || wallet.withdrawableBalance <= 0) {
+      throw new Error("No withdrawable balance");
     }
 
     const amount = wallet.withdrawableBalance;
 
-    // ✅ Deduct first
+    // ✅ Deduct balance safely
     const updated = await walletModel.updateOne(
       {
         seller: sellerId,
@@ -50,7 +44,7 @@ export const withdraw = async (req, res) => {
           seller: sellerId,
           amount,
           type: "debit",
-          status: "processing",
+          status: "processing", // 🔥 important
         },
       ],
       { session },
@@ -59,52 +53,17 @@ export const withdraw = async (req, res) => {
     await session.commitTransaction();
     session.endSession();
 
-    // =========================
-    // 🔥 Razorpay call OUTSIDE
-    // =========================
-
-    const idempotencyKey = `withdraw_${sellerId}_${txn[0]._id}_${Date.now()}`;
-
-    try {
-      const payout = await razorpay.payouts.create(
-        {
-          account_number: process.env.RAZORPAY_ACCOUNT_NUMBER,
-          fund_account_id: fundAccountId,
-          amount: amount * 100,
-          currency: "INR",
-          mode: "IMPS",
-          purpose: "payout",
-          reference_id: idempotencyKey,
-          narration: "Seller Withdrawal",
-        },
-        {
-          "Idempotency-Key": idempotencyKey,
-        },
-      );
-
+    // ✅ SIMULATE SUCCESS (after 2 sec)
+    setTimeout(async () => {
       await walletTxnModel.findByIdAndUpdate(txn[0]._id, {
         status: "success",
       });
+    }, 2000);
 
-      return res.json({
-        success: true,
-        message: "Withdrawal successful",
-        payoutId: payout.id,
-      });
-    } catch (err) {
-      await walletModel.updateOne(
-        { seller: sellerId },
-        { $inc: { withdrawableBalance: amount } },
-      );
-
-      await walletTxnModel.findByIdAndUpdate(txn[0]._id, {
-        status: "failed",
-      });
-
-      return res.status(500).json({
-        message: "Payout failed, amount restored",
-      });
-    }
+    return res.json({
+      success: true,
+      message: "Withdrawal requested",
+    });
   } catch (err) {
     await session.abortTransaction();
     session.endSession();
@@ -114,7 +73,6 @@ export const withdraw = async (req, res) => {
     });
   }
 };
-
 export const getWallet = async (req, res) => {
   try {
     const sellerId = req.user._id;

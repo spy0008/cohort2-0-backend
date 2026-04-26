@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
 
@@ -46,7 +45,6 @@ const item = {
 const ShowCaseProducts = () => {
   return (
     <div className="px-6 md:px-20 py-20 bg-white" id="fetured-product">
-      {/* 🔥 TITLE */}
       <motion.h2
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -55,7 +53,6 @@ const ShowCaseProducts = () => {
         Featured Collection
       </motion.h2>
 
-      {/* 🔥 PRODUCTS GRID */}
       <motion.div
         variants={container}
         initial="hidden"
@@ -67,22 +64,17 @@ const ShowCaseProducts = () => {
         {products.map((itemData) => (
           <motion.div key={itemData.id} variants={item}>
             <Link to="/shop" className="group block">
-              {/* IMAGE */}
               <div className="relative overflow-hidden">
                 <img
                   src={itemData.img}
                   className="w-full h-72 object-cover group-hover:scale-110 transition duration-700"
                 />
-
-                {/* 🔥 HOVER OVERLAY */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <span className="text-white text-sm border px-4 py-2">
                     View
                   </span>
                 </div>
               </div>
-
-              {/* INFO */}
               <div className="mt-3 text-sm">
                 <p className="group-hover:text-orange-500 transition">
                   {itemData.name}

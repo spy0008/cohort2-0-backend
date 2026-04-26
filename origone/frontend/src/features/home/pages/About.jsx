@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 const About = () => {
   return (
     <div className="bg-white text-black">
-      {/* 🔥 HERO */}
       <div className="h-[60vh] flex items-center justify-center text-center px-6">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -14,12 +13,11 @@ const About = () => {
             We Are <span className="text-orange-500">ORgone</span>
           </h1>
           <p className="mt-4 text-gray-500 max-w-xl mx-auto">
-            More than fashion — it's expression, identity, and attitude.
+            More than fashion it's expression, identity, and attitude.
           </p>
         </motion.div>
       </div>
 
-      {/* 🧊 STORY SECTION */}
       <div className="px-6 md:px-20 py-20 grid md:grid-cols-2 gap-12 items-center">
         <motion.img
           initial={{ opacity: 0, x: -60 }}
@@ -37,9 +35,9 @@ const About = () => {
         >
           <h2 className="text-3xl mb-6">Our Story</h2>
           <p className="text-gray-600 leading-relaxed">
-            ORgone was built for the new generation — bold thinkers, creators,
-            and individuals who refuse to blend in. We believe fashion is not
-            just clothing, it's a statement.
+            ORgone was built for the new generation bold thinkers, creators, and
+            individuals who refuse to blend in. We believe fashion is not just
+            clothing, it's a statement.
           </p>
           <p className="mt-4 text-gray-600 leading-relaxed">
             Every piece we design reflects minimalism with impact. Clean lines,
@@ -48,7 +46,6 @@ const About = () => {
         </motion.div>
       </div>
 
-      {/* 🔥 VALUES */}
       <div className="bg-black text-white px-6 md:px-20 py-20">
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
@@ -86,7 +83,6 @@ const About = () => {
         </div>
       </div>
 
-      {/* 🧊 IMAGE + TEXT SPLIT */}
       <div className="px-6 md:px-20 py-20 grid md:grid-cols-2 gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, x: -60 }}
@@ -109,7 +105,6 @@ const About = () => {
         />
       </div>
 
-      {/* 🔥 CTA */}
       <div className="bg-black text-white text-center py-20 px-6">
         <motion.h2
           initial={{ opacity: 0, y: 40 }}

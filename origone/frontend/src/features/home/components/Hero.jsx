@@ -8,7 +8,7 @@ const images = [
     className: "col-span-2 row-span-3",
   },
   {
-    src: "https://ik.imagekit.io/spy1710/orgone/photo-1512436991641-6745cdb1723f",
+    src: "https://ik.imagekit.io/spy1710/orgone/photo-1512436991641-6745cdb1723f?tr=w-800",
     className: "col-span-2 row-span-1",
   },
   {
@@ -16,11 +16,11 @@ const images = [
     className: "col-span-1 row-span-1",
   },
   {
-    src: "https://ik.imagekit.io/spy1710/orgone/photo-1503342217505-b0a15ec3261c?updatedAt=1776591808066",
+    src: "https://ik.imagekit.io/spy1710/orgone/Tops-WCE-wk16.jpg_imwidth=384",
     className: "col-span-1 row-span-1",
   },
   {
-    src: "https://ik.imagekit.io/spy1710/orgone/e0c0652e8b85cf9abbd4c22ca8df6113.jpg?updatedAt=1776583820918",
+    src: "https://ik.imagekit.io/spy1710/orgone/e0c0652e8b85cf9abbd4c22ca8df6113.jpg?tr=w-800",
     className: "col-span-2 row-span-1",
   },
 ];
@@ -29,19 +29,28 @@ const container = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.06,
+      delayChildren: 0.1,
     },
   },
 };
 
 const item = {
-  hidden: { opacity: 0, scale: 1.1 },
-  show: { opacity: 1, scale: 1 },
+  hidden: { opacity: 0, scale: 1.05 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
 };
 
 const Hero = () => {
   return (
     <div className="relative min-h-screen w-full bg-black text-white overflow-hidden">
+
       <motion.div
         variants={container}
         initial="hidden"
@@ -52,54 +61,58 @@ const Hero = () => {
           <motion.div
             key={i}
             variants={item}
-            className={`${img.className} overflow-hidden group`}
+            className={`${img.className} overflow-hidden`}
           >
             <img
               src={img.src}
-              className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+              loading="lazy"
+              className="w-full h-full object-cover will-change-transform 
+              transition-transform duration-500 ease-out hover:scale-105"
             />
           </motion.div>
         ))}
       </motion.div>
 
-      {/* 🔥 OVERLAY */}
       <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/30 to-transparent" />
 
       <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-20 z-10">
+
         <motion.h1
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           className="text-4xl md:text-6xl font-bold leading-tight max-w-xl"
         >
           Own Your <span className="text-orange-500">Expression</span>
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.8 }}
-          transition={{ delay: 0.6 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 0.85, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-4 max-w-md text-sm md:text-base text-gray-300"
         >
           Minimal. Bold. Designed for the modern generation.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
           className="mt-6 flex gap-4"
         >
           <a
             href="#fetured-product"
-            className="bg-orange-500 hover:bg-orange-400 px-6 py-3 text-black font-medium transition"
+            className="bg-orange-500 hover:bg-orange-400 px-6 py-3 text-black font-medium 
+            transition cursor-pointer"
           >
             Shop Now
           </a>
 
           <Link
             to="/shop"
-            className="border border-white px-6 py-3 hover:bg-white hover:text-black transition"
+            className="border border-white px-6 py-3 hover:bg-white hover:text-black 
+            transition cursor-pointer"
           >
             Explore
           </Link>

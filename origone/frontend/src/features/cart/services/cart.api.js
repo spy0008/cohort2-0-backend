@@ -1,16 +1,16 @@
 import axiosInstance from "../../../shared/lib/axios";
 
 export const addToCartApi = (data) =>
-  axiosInstance.post("/cart", data);
+  axiosInstance.post("/api/cart", data);
 
 export const getCartApi = () =>
-  axiosInstance.get("/cart");
+  axiosInstance.get("/api/cart");
 
 export const updateCartApi = (data) =>
-  axiosInstance.put("/cart", data);
+  axiosInstance.put("/api/cart", data);
 
 export const removeCartApi = (data) =>
-  axiosInstance.delete("/cart/remove", { data });
+  axiosInstance.delete("/api/cart/remove", { data });
 
 export const clearCartApi = () =>
-  axiosInstance.delete("/cart/clear");
+  axiosInstance.delete("/api/cart/clear");

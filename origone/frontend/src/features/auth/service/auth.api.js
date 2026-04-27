@@ -7,7 +7,7 @@ export async function register({
   fullname,
   isSeller,
 }) {
-  const res = await axiosInstance.post("/auth/register", {
+  const res = await axiosInstance.post("/api/auth/register", {
     email,
     contact,
     password,
@@ -18,20 +18,20 @@ export async function register({
 }
 
 export async function login({ email, password }) {
-  const res = await axiosInstance.post("/auth/login", { email, password });
+  const res = await axiosInstance.post("/api/auth/login", { email, password });
   return res.data;
 }
 
 export async function getMe() {
-  const res = await axiosInstance.get("/auth/me");
+  const res = await axiosInstance.get("/api/auth/me");
   return res.data;
 }
 
 export async function logout() {
-  const res = await axiosInstance.post("/auth/logout");
+  const res = await axiosInstance.post("/api/auth/logout");
   return res.data;
 }
 
 export const updateBankApi = (data) => {
-  return axiosInstance.post("/auth/bank-details", data);
+  return axiosInstance.post("/api/auth/bank-details", data);
 };

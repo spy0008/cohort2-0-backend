@@ -102,7 +102,7 @@ const Login = () => {
 
           <button
             disabled={loading}
-            className="bg-orange-500 text-white py-3 font-medium hover:bg-orange-400 transition"
+            className="bg-orange-500 cursor-pointer text-white py-3 font-medium hover:bg-orange-400 transition"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>

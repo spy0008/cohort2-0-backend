@@ -4,10 +4,12 @@ import { Navigate } from "react-router";
 import Loader from "./Loader";
 
 const Protected = ({ children, role = "buyer" }) => {
-  const user = useSelector((state) => state.auth.user);
-  const loading = useSelector((state) => state.auth.loading);
+  const user = useSelector((state) => state.auth?.user);
+  const auth = useSelector((state) => state.auth);
 
-  if (loading) {
+  if (!auth) return null;
+
+  if (auth.loading) {
     return <Loader />;
   }
 

@@ -1,8 +1,12 @@
 import axios from "axios";
-import { store } from "../../app/app.store";
-import { setClearUser } from "../../features/auth/state/auth.slice";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
+let logoutHandler = null;
+
+export const setLogoutHandler = (fn) => {
+  logoutHandler = fn;
+};
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -10,12 +14,9 @@ const axiosInstance = axios.create({
   timeout: 15000,
 });
 
-let isLoggingOut = false;
-
 axiosInstance.interceptors.response.use(
-  (response) => response,
-
-  async (error) => {
+  (res) => res,
+  (error) => {
     const status = error.response?.status;
     const url = error.config?.url || "";
 
@@ -25,31 +26,11 @@ axiosInstance.interceptors.response.use(
       url.includes("/api/auth/me");
 
     if (status === 401 && !isAuthRoute) {
-      if (!isLoggingOut) {
-        isLoggingOut = true;
-
-        try {
-          store.dispatch(setClearUser());
-        } catch (e) {
-          console.error("Logout dispatch failed:", e);
-        }
-
-        setTimeout(() => {
-          isLoggingOut = false;
-        }, 1000);
-      }
-    }
-
-    if (!error.response) {
-      console.error("Network error or server unreachable");
-    }
-
-    if (status === 500) {
-      console.error("Server error");
+      logoutHandler && logoutHandler();
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;

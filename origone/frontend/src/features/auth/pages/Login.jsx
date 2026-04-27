@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const { handleLogin } = useAuth();
-  const loading = useSelector((state) => state.auth.loading);
+  const loading = useSelector((state) => state.auth?.loading ?? true);
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);

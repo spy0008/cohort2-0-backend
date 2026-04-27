@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
   const { handleRegister } = useAuth();
-  const loading = useSelector((state) => state.auth.loading);
+  const loading = useSelector((state) => state.auth?.loading ?? true);
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -34,12 +34,11 @@ const Register = () => {
 
   return (
     <div className="min-h-screen grid md:grid-cols-2">
-
       <div className="hidden md:flex relative">
         <motion.img
           src="https://ik.imagekit.io/spy1710/orgone/registerImage.jpg"
           className="absolute inset-0 w-full h-full object-cover"
-           initial={{ opacity: 0, x: -40 }}
+          initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
           alt="Register_image"

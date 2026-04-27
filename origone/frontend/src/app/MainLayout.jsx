@@ -7,10 +7,7 @@ const MainLayout = () => {
   return (
     <div>
       <Navbar />
-
-      {/* 🔥 Yaha dynamic pages render honge */}
       <Outlet />
-
       <Footer />
     </div>
   );

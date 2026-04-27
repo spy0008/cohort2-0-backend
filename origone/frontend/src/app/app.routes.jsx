@@ -1,14 +1,15 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
 import MainLayout from "./MainLayout";
 
+const SellerDashboard = lazy(
+  () => import("../features/seller/product/pages/SellerDashboard"),
+);
 import Register from "../features/auth/pages/Register";
 import Login from "../features/auth/pages/Login";
 import Home from "../features/home/pages/Home";
 import About from "../features/home/pages/About";
-import CreateProduct from "../features/seller/product/pages/CreateProduct";
 import Protected from "../features/auth/components/Protected";
-import SellerProductsPage from "../features/seller/product/pages/SellerProduct";
-import SellerDashboard from "../features/seller/product/pages/SellerDashboard";
 import ShopPage from "../features/shop/pages/ShopPage";
 import ProductDetailPage from "../features/shop/pages/ProductDetailPage";
 import CartPage from "../features/cart/pages/CartPage";
@@ -16,7 +17,15 @@ import CheckoutPage from "../features/checkout/pages/CheckoutPage";
 import OrderSuccess from "../features/checkout/pages/OrderSuccess";
 import MyOrdersPage from "../features/orders/pages/MyOrdersPage";
 import OrderDetailPage from "../features/orders/pages/OrderDetailPage";
-import WalletPage from "../features/seller/wallet/pages/WalletPage";
+const CreateProduct = lazy(
+  () => import("../features/seller/product/pages/CreateProduct"),
+);
+const SellerProductsPage = lazy(
+  () => import("../features/seller/product/pages/SellerProduct"),
+);
+const WalletPage = lazy(
+  () => import("../features/seller/wallet/pages/WalletPage"),
+);
 
 export const routes = createBrowserRouter([
   {
@@ -64,7 +73,15 @@ export const routes = createBrowserRouter([
         path: "seller/dashboard/create-product",
         element: (
           <Protected role="seller">
-            <CreateProduct />
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-screen">
+                  Loading...
+                </div>
+              }
+            >
+              <CreateProduct />
+            </Suspense>
           </Protected>
         ),
       },
@@ -72,7 +89,15 @@ export const routes = createBrowserRouter([
         path: "seller/dashboard/my-vault",
         element: (
           <Protected role="seller">
-            <SellerProductsPage />
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-screen">
+                  Loading...
+                </div>
+              }
+            >
+              <SellerProductsPage />
+            </Suspense>
           </Protected>
         ),
       },
@@ -80,7 +105,15 @@ export const routes = createBrowserRouter([
         path: "seller/dashboard",
         element: (
           <Protected role="seller">
-            <SellerDashboard />
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-screen">
+                  Loading...
+                </div>
+              }
+            >
+              <SellerDashboard />
+            </Suspense>
           </Protected>
         ),
       },
@@ -88,7 +121,15 @@ export const routes = createBrowserRouter([
         path: "seller/dashboard/edit-product/:id",
         element: (
           <Protected role="seller">
-            <CreateProduct />
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-screen">
+                  Loading...
+                </div>
+              }
+            >
+              <CreateProduct />
+            </Suspense>
           </Protected>
         ),
       },
@@ -96,7 +137,15 @@ export const routes = createBrowserRouter([
         path: "seller/dashboard/wallet",
         element: (
           <Protected role="seller">
-            <WalletPage />
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center h-screen">
+                  Loading...
+                </div>
+              }
+            >
+              <WalletPage />
+            </Suspense>
           </Protected>
         ),
       },

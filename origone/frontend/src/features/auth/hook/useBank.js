@@ -5,7 +5,7 @@ export const useBank = () => {
   const dispatch = useDispatch();
 
   const updateBank = (data) => {
-    return dispatch(updateBankThunk(data));
+    return dispatch(updateBankThunk(data)).unwrap();
   };
 
   return { updateBank };

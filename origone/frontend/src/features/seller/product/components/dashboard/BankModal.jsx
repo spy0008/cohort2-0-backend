@@ -38,15 +38,14 @@ const BankModal = ({ onClose }) => {
     setLoading(true);
     if (!validate()) return;
 
-    const res = await updateBank(form);
-
-    if (res.meta.requestStatus === "fulfilled") {
+    try {
+      await updateBank(form);
       toast.success("Bank linked successfully ✅");
       onClose(true);
+    } catch (err) {
+      toast.error(err?.message || err?.error || "Something went wrong");
+    } finally {
       setLoading(false);
-    } else {
-      setLoading(false);
-      toast.error(res.payload?.message || "Something went wrong");
     }
   };
 

@@ -41,6 +41,12 @@ if (!process.env.FRONTEND_URL) {
   );
 }
 
+if (!process.env.BASE_URL) {
+  throw new Error(
+    "BASE_URL is not defined in environment variables",
+  );
+}
+
 export const config = {
   MONGO_URI: process.env.MONGO_URI,
   JWT_SECRET: process.env.JWT_SECRET,
@@ -51,4 +57,5 @@ export const config = {
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
   RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
   FRONTEND_URL: process.env.FRONTEND_URL,
+  BASE_URL: process.env.BASE_URL
 };

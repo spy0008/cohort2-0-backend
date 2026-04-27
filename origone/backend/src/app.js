@@ -27,7 +27,7 @@ app.use(
 );
 
 app.use(passport.initialize());
-
+app.set("trust proxy", 1);
 passport.use(
   new GoogleStrategy(
     {

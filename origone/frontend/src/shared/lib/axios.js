@@ -1,6 +1,4 @@
 import axios from "axios";
-import { setUser } from "../../features/auth/state/auth.slice";
-import { useDispatch } from "react-redux";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -16,8 +14,13 @@ axiosInstance.interceptors.response.use(
       error.response?.status === 401 &&
       !window.location.pathname.includes("/login")
     ) {
-      const dispatch = useDispatch();
-      dispatch(setUser(null));
+      import("../../app/app.store").then(({ store }) => {
+        try {
+          store.dispatch({ type: "auth/setUser", payload: null });
+        } catch (e) {
+          console.error("Failed to dispatch logout action", e);
+        }
+      });
     }
 
     return Promise.reject(error);

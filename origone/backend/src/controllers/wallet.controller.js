@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import walletModel from "../models/wallet.model.js";
 import walletTxnModel from "../models/walletTransaction.model.js";
-import userModel from "../models/user.model.js";
-import { razorpay } from "../services/payment.service.js";
 
 export const withdraw = async (req, res) => {
   const session = await mongoose.startSession();
@@ -21,7 +19,6 @@ export const withdraw = async (req, res) => {
 
     const amount = wallet.withdrawableBalance;
 
-    // ✅ Deduct balance safely
     const updated = await walletModel.updateOne(
       {
         seller: sellerId,
@@ -37,14 +34,13 @@ export const withdraw = async (req, res) => {
       throw new Error("Balance already used");
     }
 
-    // ✅ Create txn (processing)
     const txn = await walletTxnModel.create(
       [
         {
           seller: sellerId,
           amount,
           type: "debit",
-          status: "processing", // 🔥 important
+          status: "processing",
         },
       ],
       { session },
@@ -53,7 +49,6 @@ export const withdraw = async (req, res) => {
     await session.commitTransaction();
     session.endSession();
 
-    // ✅ SIMULATE SUCCESS (after 2 sec)
     setTimeout(async () => {
       await walletTxnModel.findByIdAndUpdate(txn[0]._id, {
         status: "success",

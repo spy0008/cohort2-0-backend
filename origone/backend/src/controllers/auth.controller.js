@@ -159,7 +159,6 @@ export const updateBankDetails = async (req, res) => {
     const sellerId = req.user._id;
     const { accountNumber, ifsc, accountHolderName } = req.body;
 
-    // ✅ validation
     if (!accountNumber || !ifsc || !accountHolderName) {
       return res.status(400).json({ message: "All fields required" });
     }
@@ -170,12 +169,11 @@ export const updateBankDetails = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ✅ directly save (NO RAZORPAY)
     user.bankDetails = {
       accountNumber,
       ifsc,
       accountHolderName,
-      isVerified: true, // simulation me directly true
+      isVerified: true,
     };
 
     await user.save();

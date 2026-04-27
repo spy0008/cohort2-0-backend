@@ -8,11 +8,9 @@ const orderItemSchema = new mongoose.Schema(
       required: true,
     },
 
-    // 🔥 SNAPSHOT DATA (VERY IMPORTANT)
     title: String,
     image: String,
 
-    // 🔥 VARIANT
     size: String,
     color: String,
 

@@ -36,7 +36,6 @@ function validateImage(file) {
   }
 }
 
-// ================= CREATE PRODUCT =================
 export async function createProduct(req, res) {
   const { title, description, priceAmount, variants } = req.body;
   const seller = req.user;
@@ -122,7 +121,6 @@ export async function createProduct(req, res) {
   });
 }
 
-// ================= SELLER PRODUCTS =================
 export const getSellerProducts = async (req, res) => {
   const sellerId = req.user._id;
   const { page = 1, limit = 10 } = req.query;
@@ -142,7 +140,6 @@ export const getSellerProducts = async (req, res) => {
   res.json({ success: true, products });
 };
 
-// ================= GET ALL PRODUCTS =================
 export async function getProducts(req, res) {
   const { minPrice, maxPrice, search, sort, page = 1, limit = 10 } = req.query;
 
@@ -184,7 +181,6 @@ export async function getProducts(req, res) {
   });
 }
 
-// ================= GET SINGLE PRODUCT =================
 export async function getSingleProduct(req, res) {
   const { id } = req.params;
 
@@ -200,7 +196,6 @@ export async function getSingleProduct(req, res) {
   res.json({ success: true, product });
 }
 
-// ================= UPDATE PRODUCT =================
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
   const sellerId = req.user._id;
@@ -277,7 +272,6 @@ export const updateProduct = async (req, res) => {
   });
 };
 
-// ================= DELETE PRODUCT =================
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
   const sellerId = req.user._id;
@@ -301,7 +295,6 @@ export const deleteProduct = async (req, res) => {
   });
 };
 
-// ================= SELLER REVENUE =================
 export const getSellerRevenue = async (req, res) => {
   try {
     const sellerId = req.user._id;
@@ -341,7 +334,6 @@ export const getSellerRevenue = async (req, res) => {
   }
 };
 
-// ================= SELLER DASHBOARD =================
 export const getSellerDashboard = async (req, res) => {
   try {
     const sellerId = req.user._id;

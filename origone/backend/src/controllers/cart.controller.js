@@ -1,12 +1,10 @@
 import cartModel from "../models/cart.model.js";
 import productModel from "../models/product.model.js";
 
-// find variant
 function findVariant(product, size, color) {
   return product.variants.find((v) => v.size === size && v.color === color);
 }
 
-// ================= ADD TO CART =================
 export const addToCart = async (req, res) => {
   const userId = req.user._id;
   const { productId, size, color, quantity = 1 } = req.body;
@@ -75,7 +73,6 @@ export const addToCart = async (req, res) => {
   });
 };
 
-// ================= GET CART =================
 export const getCart = async (req, res) => {
   const userId = req.user._id;
 
@@ -90,7 +87,6 @@ export const getCart = async (req, res) => {
   res.json({ success: true, cart });
 };
 
-// ================= UPDATE CART =================
 export const updateCartItem = async (req, res) => {
   const userId = req.user._id;
   const { productId, size, color, quantity } = req.body;
@@ -148,7 +144,6 @@ export const updateCartItem = async (req, res) => {
   });
 };
 
-// ================= REMOVE ITEM =================
 export const removeFromCart = async (req, res) => {
   const userId = req.user._id;
   const { productId, size, color } = req.body;
@@ -177,7 +172,6 @@ export const removeFromCart = async (req, res) => {
   });
 };
 
-// ================= CLEAR CART =================
 export const clearCart = async (req, res) => {
   const userId = req.user._id;
 

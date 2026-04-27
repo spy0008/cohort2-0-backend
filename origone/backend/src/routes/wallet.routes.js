@@ -4,9 +4,9 @@ import { authenticateSeller } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.get("/", authenticateSeller, getWallet); // ✅ balance
-router.get("/transactions", authenticateSeller, getWalletTransactions); // ✅ history
-router.post("/withdraw", authenticateSeller, withdraw); // ✅ withdraw
+router.get("/", authenticateSeller, getWallet); 
+router.get("/transactions", authenticateSeller, getWalletTransactions); 
+router.post("/withdraw", authenticateSeller, withdraw);
 
 
 export default router;

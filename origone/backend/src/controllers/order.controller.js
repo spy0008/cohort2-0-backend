@@ -6,12 +6,10 @@ import { razorpay } from "../services/payment.service.js";
 import walletModel from "../models/wallet.model.js";
 import walletTxnModel from "../models/walletTransaction.model.js";
 
-// 🔥 helper
 function findVariant(product, size, color) {
   return product.variants.find((v) => v.size === size && v.color === color);
 }
 
-// ================= CREATE PAYMENT ORDER =================
 export const createPaymentOrder = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -59,7 +57,6 @@ export const createPaymentOrder = async (req, res) => {
   }
 };
 
-// ================= VERIFY PAYMENT + CREATE ORDER =================
 export const verifyPaymentAndCreateOrder = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -71,14 +68,12 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
       address,
     } = req.body;
 
-    // ✅ address validation
     if (!address?.fullAddress || !address?.city || !address?.pincode) {
       return res.status(400).json({
         message: "Invalid address",
       });
     }
 
-    // ✅ duplicate payment check
     const existingOrder = await orderModel.findOne({
       razorpay_payment_id,
     });
@@ -89,7 +84,6 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
       });
     }
 
-    // ✅ verify signature
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
     const expectedSignature = crypto
@@ -125,7 +119,6 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
         });
       }
 
-      // ✅ SAFE STOCK UPDATE (race condition fix)
       const updated = await productModel.updateOne(
         {
           _id: product._id,
@@ -148,7 +141,6 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
 
       totalAmount += price * item.quantity;
 
-      // ✅ snapshot fix (image.url)
       orderItems.push({
         product: product._id,
         title: product.title,
@@ -168,7 +160,6 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
       paymentStatus: "paid",
       paymentMethod: "razorpay",
 
-      // ✅ SAVE RAZORPAY DATA
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
@@ -176,7 +167,6 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
       address,
     });
 
-    // ✅ clear cart
     cart.items = [];
     await cart.save();
 
@@ -190,7 +180,6 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
   }
 };
 
-// ================= GET MY ORDERS =================
 export const getMyOrders = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -205,7 +194,6 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
-// ================= GET SELLER ORDERS =================
 export const getSellerOrders = async (req, res) => {
   try {
     const sellerId = req.user._id;
@@ -232,7 +220,6 @@ export const getSellerOrders = async (req, res) => {
   }
 };
 
-// ================= UPDATE ORDER STATUS =================
 export const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -291,7 +278,6 @@ export const updateOrderStatus = async (req, res) => {
     }
 
     if (status === "returned") {
-      // refund user
       if (order.paymentStatus === "paid") {
         await razorpay.payments.refund(order.razorpay_payment_id, {
           amount: order.totalAmount * 100,
@@ -300,7 +286,6 @@ export const updateOrderStatus = async (req, res) => {
         order.paymentStatus = "refunded";
       }
 
-      // restore stock
       for (const item of order.items) {
         await productModel.updateOne(
           {
@@ -314,7 +299,6 @@ export const updateOrderStatus = async (req, res) => {
         );
       }
 
-      // wallet reverse (safe)
       for (const item of order.items) {
         const amount = item.price * item.quantity;
 
@@ -435,7 +419,6 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
-// GET SINGLE ORDER
 export const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;

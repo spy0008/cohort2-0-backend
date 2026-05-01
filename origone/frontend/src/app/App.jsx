@@ -19,7 +19,7 @@ function App() {
     setLogoutHandler(() => {
       dispatch(setClearUser());
     });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     handleGetUser();

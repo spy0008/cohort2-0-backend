@@ -62,13 +62,11 @@ export const useAuth = () => {
       dispatch(setUser(data.user));
       dispatch(setError(null));
     } catch (error) {
-      dispatch(setUser(null));
-      dispatch(
-        setError(
-          error.response?.data?.message ||
-            "Fetching user failed, please login again",
-        ),
-      );
+      if (error.response?.status === 401) {
+        dispatch(setUser(null)); // silent
+      } else {
+        dispatch(setError("Something went wrong"));
+      }
     } finally {
       dispatch(setLoading(false));
     }

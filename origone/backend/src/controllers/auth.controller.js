@@ -144,11 +144,12 @@ export const googleCallback = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.cookie("token", "", {
-      expires: new Date(0),
+    const isProd = process.env.NODE_ENV === "production";
+
+    res.clearCookie("token", {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
     });
 
     res.status(200).json({
@@ -156,10 +157,7 @@ export const logout = async (req, res) => {
       message: "Logged out successfully",
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Logout failed",
-    });
+    res.status(500).json({ message: "Logout failed" });
   }
 };
 

@@ -8,7 +8,6 @@ import cartRouter from "./routes/cart.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import walletRouter from "./routes/wallet.routes.js";
 import cors from "cors";
-import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { config } from "./config/config.js";
 
@@ -24,21 +23,6 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
-);
-
-app.use(passport.initialize());
-app.set("trust proxy", 1);
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: config.GOOGLE_CLIENT_ID,
-      clientSecret: config.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${config.BASE_URL}/api/auth/google/callback`,
-    },
-    (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
-    },
-  ),
 );
 
 app.get("/", (_req, res) => {

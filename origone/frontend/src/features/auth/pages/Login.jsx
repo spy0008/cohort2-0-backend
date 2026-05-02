@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../hook/useAuth";
 import { Link, useNavigate } from "react-router";
-import ContinueWithGoogle from "../components/ContinueWithGoogle";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
@@ -106,8 +105,6 @@ const Login = () => {
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
-
-          <ContinueWithGoogle />
 
           <p className="text-sm text-gray-500">
             Don’t have an account?{" "}

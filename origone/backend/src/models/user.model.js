@@ -16,9 +16,6 @@ const userSchema = new mongoose.Schema({
     enum: ["buyer", "seller"],
     default: "buyer",
   },
-  googleId: {
-    type: String,
-  },
   bankDetails: {
     accountNumber: { type: String },
     ifsc: { type: String },

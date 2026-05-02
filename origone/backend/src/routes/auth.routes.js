@@ -25,24 +25,6 @@ router.get("/me", authenticateUser, getMe);
 
 router.post("/logout", logout);
 
-// /api/auth/google
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] }),
-);
-
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    session: false,
-    failureRedirect:
-      config.NODE_ENV == "development"
-        ? "http://localhost:5173/login"
-        : "/login",
-  }),
-  googleCallback,
-);
-
 router.post("/bank-details", authenticateSeller, updateBankDetails);
 
 export default router;

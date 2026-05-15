@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "kubernetes://schema/rbac.authorization.k8s.io/v1@rolebinding": "file:///home/naman/Desktop/backend/uivio/k8s/rbac.yml"
+    }
+}

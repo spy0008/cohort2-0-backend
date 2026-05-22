@@ -1,102 +1,138 @@
 import { k8sCoreV1Api } from "./config.js";
 
-export async function createPod(sandboxId) {
-  const podManifest = {
-    metadata: {
-      name: `sandbox-pod-${sandboxId}`,
-      labels: {
-        app: "sandbox",
-        sandboxId: sandboxId,
-      },
-    },
-    spec: {
-      volumes: [
-        {
-          name: "workspace-volume",
-          emptyDir: {},
+
+export async function createPod(sandboxId, projectId) {
+
+    const podManifest = {
+        metadata: {
+            name: `sandbox-pod-${sandboxId}`,
+            labels: {
+                sandboxId: sandboxId
+            }
         },
-      ],
-      initContainers: [
-        {
-          name: "init-workspace",
+        spec: {
+            volumes: [
+                {
+                    name: 'workspace-volume',
+                    emptyDir: {}
+                }
+            ],
+            initContainers: [
+                {
+                    name: 'init-container',
+                    image: "329599656829.dkr.ecr.ap-southeast-1.amazonaws.com/template",
+                    imagePullPolicy: "IfNotPresent",
+                    command: [ 'sh', '-c', 'cp -r /workspace/. /seed/' ],
+                    volumeMounts: [
+                        {
+                            name: 'workspace-volume',
+                            mountPath: '/seed'
+                        }
+                    ]
+                }
+            ],
+            containers: [
+                {
+                    image: "329599656829.dkr.ecr.ap-southeast-1.amazonaws.com/template",
+                    imagePullPolicy: "IfNotPresent",
+                    name: 'sandbox-container',
+                    ports: [ { containerPort: 5173, name: "http" } ],
+                    resources: {
+                        limits: { cpu: "500m", memory: "1Gi" },
+                        requests: { cpu: "250m", memory: "500Mi" }
+                    },
+                    volumeMounts: [
+                        {
+                            name: 'workspace-volume',
+                            mountPath: '/workspace'
+                        }
+                    ]
+                },
+                {
+                    image: "329599656829.dkr.ecr.ap-southeast-1.amazonaws.com/agent",
+                    imagePullPolicy: "IfNotPresent",
+                    name: 'agent-container',
+                    ports: [ { containerPort: 3000, name: "http" } ],
+                    resources: {
+                        limits: { cpu: "500m", memory: "1Gi" },
+                        requests: { cpu: "250m", memory: "500Mi" }
+                    },
+                    volumeMounts: [
+                        {
+                            name: 'workspace-volume',
+                            mountPath: '/workspace'
+                        }
+                    ]
+                },
+                {
+                    image: "329599656829.dkr.ecr.ap-southeast-1.amazonaws.com/sync-agent",
+                    imagePullPolicy: "IfNotPresent",
+                    name: 'sync-agent-container',
+                    ports: [ { containerPort: 4000, name: "http" } ],
+                    resources: {
+                        limits: { cpu: "500m", memory: "1Gi" },
+                        requests: { cpu: "250m", memory: "500Mi" }
+                    },
+                    volumeMounts: [
+                        {
+                            name: 'workspace-volume',
+                            mountPath: '/workspace'
+                        }
+                    ],
+                    env: [
+                        {
+                            name: "PROJECT_ID",
+                            value: projectId
+                        },
+                        {
+                            name: "AWS_ACCESS_KEY_ID",
+                            valueFrom: {
+                                secretKeyRef: {
+                                    name: "aws",
+                                    key: "AWS_ACCESS_KEY_ID"
+                                }
+                            }
+                        },
+                        {
+                            name: "AWS_SECRET_ACCESS_KEY",
+                            valueFrom: {
+                                secretKeyRef: {
+                                    name: "aws",
+                                    key: "AWS_SECRET_ACCESS_KEY"
+                                }
+                            }
 
-          image: "template:latest",
+                        },
+                        {
+                            name: "AWS_REGION",
+                            valueFrom: {
+                                secretKeyRef: {
+                                    name: "aws",
+                                    key: "AWS_REGION"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
 
-          imagePullPolicy: "Never",
+    const response = await k8sCoreV1Api.createNamespacedPod({
+        namespace: 'default',
+        body: podManifest
+    })
 
-          command: ["sh", "-c", "cp -r /workspace/. /seed/"],
+    return response;
+}
 
-          volumeMounts: [
-            {
-              name: "workspace-volume",
-              mountPath: "/seed",
-            },
-          ],
-        },
-      ],
-      containers: [
-        {
-          image: "template:latest",
-          imagePullPolicy: "Never",
-          name: "sandbox-container",
-          ports: [
-            {
-              containerPort: 5173,
-              name: "http",
-            },
-          ],
-          resources: {
-            limits: {
-              cpu: "400m",
-              memory: "300Mi",
-            },
-            requests: {
-              cpu: "200m",
-              memory: "150Mi",
-            },
-          },
-          volumeMounts: [
-            {
-              name: "workspace-volume",
-              mountPath: "/workspace",
-            },
-          ],
-        },
-        {
-          image: "agent:latest",
-          imagePullPolicy: "Never",
-          name: "agent-container",
-          ports: [
-            {
-              containerPort: 3000,
-              name: "http",
-            },
-          ],
-          resources: {
-            limits: {
-              cpu: "400m",
-              memory: "300Mi",
-            },
-            requests: {
-              cpu: "200m",
-              memory: "150Mi",
-            },
-          },
-          volumeMounts: [
-            {
-              name: "workspace-volume",
-              mountPath: "/workspace",
-            },
-          ],
-        },
-      ],
-    },
-  };
+export async function deletePod(sandboxId) {
+    const response = await k8sCoreV1Api.deleteNamespacedPod({
+        namespace: 'default',
+        name: `sandbox-pod-${sandboxId}`
+    }, {
+        gracePeriodSeconds: 0,
+    })
 
-  const response = await k8sCoreV1Api.createNamespacedPod({
-    namespace: "default",
-    body: podManifest,
-  });
-
-  return response;
+    return response;
 }

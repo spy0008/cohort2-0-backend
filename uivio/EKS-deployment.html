@@ -836,7 +836,7 @@ footer span {
 
     <div class="concept">
       <div class="concept-label">The Architecture</div>
-      <p>Your entire app lives on <strong>one domain</strong> (e.g. <code>www.cryboy.in</code>). CloudFront sits at the edge and decides where to send each request: anything matching <code>/api/*</code> goes to the EKS Load Balancer, everything else is served as a static file from S3. Backend microservices live inside EKS and are routed by an nginx ingress controller.</p>
+      <p>Your entire app lives on <strong>one domain</strong> (e.g. <code>localhost</code>). CloudFront sits at the edge and decides where to send each request: anything matching <code>/api/*</code> goes to the EKS Load Balancer, everything else is served as a static file from S3. Backend microservices live inside EKS and are routed by an nginx ingress controller.</p>
     </div>
 
     <h3>Traffic flow</h3>
@@ -844,7 +844,7 @@ footer span {
       <div class="flow-step">
         <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
         <div class="flow-content">
-          <div class="flow-title">Browser hits www.cryboy.in</div>
+          <div class="flow-title">Browser hits localhost</div>
           <div class="flow-detail">DNS CNAME resolves to your CloudFront distribution</div>
         </div>
       </div>
@@ -1624,7 +1624,7 @@ ingress-nginx-controller   LoadBalancer   <span class="c-str">a8eacd25575f94fbb9
 
     <div class="concept">
       <div class="concept-label">Critical — Order of operations</div>
-      <p>CloudFront requires an SSL certificate to use a custom domain like <code>www.cryboy.in</code>. The certificate must be <strong>validated and ISSUED before</strong> you create the CloudFront distribution — if it is still pending, CloudFront rejects it with <em>InvalidViewerCertificate</em>. Always do ACM first, wait until it shows ISSUED, then create CloudFront.</p>
+      <p>CloudFront requires an SSL certificate to use a custom domain like <code>localhost</code>. The certificate must be <strong>validated and ISSUED before</strong> you create the CloudFront distribution — if it is still pending, CloudFront rejects it with <em>InvalidViewerCertificate</em>. Always do ACM first, wait until it shows ISSUED, then create CloudFront.</p>
     </div>
 
     <div class="warn">
@@ -1859,7 +1859,7 @@ ingress-nginx-controller   LoadBalancer   <span class="c-str">a8eacd25575f94fbb9
     },
     "Aliases": {
       "Quantity": 1,
-      "Items": ["www.cryboy.in"]
+      "Items": ["localhost"]
     },
     "ViewerCertificate": {
       "ACMCertificateArn": "&lt;YOUR_ACM_CERT_ARN&gt;",
@@ -1880,14 +1880,14 @@ ingress-nginx-controller   LoadBalancer   <span class="c-str">a8eacd25575f94fbb9
         <tr><td><span class="f-name">OriginProtocolPolicy</span></td><td><span class="f-val">http-only</span></td><td class="f-desc">S3 website endpoints don't support HTTPS directly. CloudFront still serves HTTPS to viewers.</td></tr>
         <tr><td><span class="f-name">ViewerProtocolPolicy</span></td><td><span class="f-val">redirect-to-https</span></td><td class="f-desc">Forces all viewer traffic to HTTPS.</td></tr>
         <tr><td><span class="f-name">CachePolicyId</span></td><td><span class="f-val">658327ea-f89d-...</span></td><td class="f-desc">AWS's built-in <strong>CachingOptimized</strong> policy. Good defaults for static assets.</td></tr>
-        <tr><td><span class="f-name">Aliases</span></td><td><span class="f-val">www.cryboy.in</span></td><td class="f-desc">Your custom domain. Must match the ACM certificate's subject names.</td></tr>
+        <tr><td><span class="f-name">Aliases</span></td><td><span class="f-val">localhost</span></td><td class="f-desc">Your custom domain. Must match the ACM certificate's subject names.</td></tr>
       </tbody>
     </table>
 
     <p>The response contains the distribution ID (e.g. <code>E1INMLV41YBB7E</code>) and CloudFront domain (e.g. <code>d3nmrq0jxugnpu.cloudfront.net</code>). Save both — you need them for DNS and for adding the API behavior next.</p>
 
     <h3>Step 2 — Add custom error responses for React Router</h3>
-    <p>React Router uses client-side routing — direct URLs like <code>www.cryboy.in/dashboard</code> are not real S3 files. Without this fix, CloudFront returns a 403/404 for any non-root URL. The fix is to serve <code>/index.html</code> with status 200 for both error codes, so React Router can handle the route on page load.</p>
+    <p>React Router uses client-side routing — direct URLs like <code>localhost/dashboard</code> are not real S3 files. Without this fix, CloudFront returns a 403/404 for any non-root URL. The fix is to serve <code>/index.html</code> with status 200 for both error codes, so React Router can handle the route on page load.</p>
 
     <p>Do this in the AWS Console — it's clearer than the JSON:</p>
 
@@ -2001,10 +2001,10 @@ ingress-nginx-controller   LoadBalancer   <span class="c-str">a8eacd25575f94fbb9
     <div class="step-label green">Verify both origins respond correctly</div>
     <div class="code-wrap">
       <div class="code-header"><span class="code-label">Terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><span class="c-cmd">curl -I</span> <span class="c-val">https://www.cryboy.in</span>
+      <pre><span class="c-cmd">curl -I</span> <span class="c-val">https://localhost</span>
 <span class="c-comment"># Should return 200 from CloudFront with server: AmazonS3 → React app is served</span>
 
-<span class="c-cmd">curl -I</span> <span class="c-val">https://www.cryboy.in/api/auth</span>
+<span class="c-cmd">curl -I</span> <span class="c-val">https://localhost/api/auth</span>
 <span class="c-comment"># Should hit the auth service — look for X-Powered-By: Express in the response</span>
 <span class="c-comment"># If you see server: AmazonS3 instead, the /api/* behavior is missing or wrong</span></pre>
     </div>
@@ -2051,7 +2051,7 @@ ingress-nginx-controller   LoadBalancer   <span class="c-str">a8eacd25575f94fbb9
     <div class="step-label green">Verify DNS resolves correctly</div>
     <div class="code-wrap">
       <div class="code-header"><span class="code-label">Terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><span class="c-cmd">nslookup</span> <span class="c-val">www.cryboy.in</span>
+      <pre><span class="c-cmd">nslookup</span> <span class="c-val">localhost</span>
 <span class="c-comment"># Should return a CloudFront edge IP (and a chain through the cloudfront.net CNAME)</span>
 
 <span class="c-cmd">nslookup</span> <span class="c-val">test.preview.cryboy.in</span>
